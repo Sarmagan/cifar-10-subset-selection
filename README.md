@@ -47,7 +47,9 @@ Greedy maximization is used to find the solution set, which then serves as the t
 | Method | Test Accuracy |
 |--------|--------------|
 | Random baseline (mean) | 72.61% |
-| Submodular, best configuration | |
+| Submodular subset | 73.63% |
+
+Selecting a subset using submodular optimization beats random. 
 
 ## Scripts
 
