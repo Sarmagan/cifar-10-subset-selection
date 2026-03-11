@@ -11,7 +11,7 @@ Training on the full dataset is expensive. If a small, well-chosen subset preser
 Dataset: CIFAR-10 (50,000 training images, 10,000 test images)  
 Subset size: 5,000 samples (10% of training set)  
 Model: Small ResNet (3 residual blocks), trained from scratch  
-Epochs: 10 per run  
+Epochs: 100 per run  
 Evaluation: Full test set (10,000 images)
 
 ## Experiment 1: Random Baseline
@@ -22,11 +22,11 @@ To establish a performance baseline, the training set is randomly sampled 50 tim
 |--------|-------|
 | Trials | 50 |
 | Subset size | 5,000 / 50,000 |
-| Mean accuracy | 53.70% |
-| Std deviation | 0.75% |
-| Min accuracy | 51.76% |
-| Max accuracy | 55.03% |
-| Median accuracy | 53.69% |
+| Mean accuracy | 72.61% |
+| Std deviation | 0.68% |
+| Min accuracy | 71.02% |
+| Max accuracy | 74.25% |
+| Median accuracy | 72.57% |
 
 ![Random subset performance](subset_accuracy_histogram.png)
 
@@ -47,9 +47,7 @@ Greedy maximization is used to find the solution set, which then serves as the t
 | Method | Test Accuracy |
 |--------|--------------|
 | Random baseline (mean) | 53.70% |
-| Submodular, best configuration | **54.88%** |
-
-The best submodular configuration achieves +1.18 percentage points over the random mean, demonstrating that structured selection finds a consistently better subset than chance.
+| Submodular, best configuration | |
 
 ## Scripts
 

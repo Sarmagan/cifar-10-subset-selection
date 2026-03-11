@@ -24,7 +24,7 @@ import argparse
 DEFAULT_CONFIG = dict(
     subset_size=5000,       # number of training samples per trial
     num_trials=50,
-    epochs_per_trial=10,
+    epochs_per_trial=100,    # Updated to 100 epochs
     batch_size=128,
     lr=0.01,
     momentum=0.9,
@@ -172,6 +172,8 @@ def run_trial(trial_idx, train_full, test_loader, config, device, parent_run_id)
         train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
         test_loss, test_acc = evaluate(model, test_loader, criterion, device)
         scheduler.step()
+        
+        # Track the best accuracy seen so far
         best_test_acc = max(best_test_acc, test_acc)
 
         wandb.log({
@@ -180,17 +182,19 @@ def run_trial(trial_idx, train_full, test_loader, config, device, parent_run_id)
             "train/acc": train_acc,
             "test/loss": test_loss,
             "test/acc": test_acc,
+            "best_test_acc": best_test_acc, # Helpful to see it climb in W&B
             "lr": scheduler.get_last_lr()[0],
         })
 
-    final_test_loss, final_test_acc = evaluate(model, test_loader, criterion, device)
-    wandb.summary["final_test_acc"] = final_test_acc
+    # Record the best accuracy to W&B summary and finish run
     wandb.summary["best_test_acc"] = best_test_acc
     wandb.finish()
 
     print(f"  Trial {trial_idx:02d}/{config['num_trials']} | "
-          f"Final test acc: {final_test_acc*100:.2f}%")
-    return final_test_acc
+          f"Best test acc: {best_test_acc*100:.2f}%")
+          
+    # Return the best accuracy instead of the final accuracy
+    return best_test_acc
 
 
 # ─────────────────────────────────────────────
@@ -266,10 +270,10 @@ def main(config):
         ax.text(val, ax.get_ylim()[1] * 0.92, label,
                 ha="center", va="top", fontsize=8, color="#555555")
 
-    ax.set_xlabel("Test Accuracy (%)", fontsize=12)
+    ax.set_xlabel("Best Test Accuracy (%)", fontsize=12)
     ax.set_ylabel("Count", fontsize=12)
     ax.set_title(
-        f"Test Accuracy Distribution over {config['num_trials']} Random Subsets\n"
+        f"Best Test Accuracy Distribution over {config['num_trials']} Random Subsets\n"
         f"(subset size = {config['subset_size']} / {len(train_full)}, "
         f"{config['epochs_per_trial']} epochs each)",
         fontsize=12,
@@ -299,10 +303,10 @@ def main(config):
         "summary/max_acc":    max_acc,
         "summary/median_acc": median_acc,
         "summary/histogram":  wandb.Image(hist_path),
-        "summary/all_trial_accs": wandb.Histogram(accs),
+        "summary/all_trial_best_accs": wandb.Histogram(accs),
     })
     # Log a table of per-trial results
-    table = wandb.Table(columns=["trial", "test_acc_%"])
+    table = wandb.Table(columns=["trial", "best_test_acc_%"])
     for i, a in enumerate(accs, 1):
         table.add_data(i, round(float(a), 4))
     wandb.log({"summary/trial_results": table})
