@@ -46,7 +46,7 @@ Greedy maximization is used to find the solution set, which then serves as the t
 
 | Method | Test Accuracy |
 |--------|--------------|
-| Random baseline (mean) | 53.70% |
+| Random baseline (mean) | 72.61% |
 | Submodular, best configuration | |
 
 ## Scripts
