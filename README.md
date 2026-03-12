@@ -1,4 +1,4 @@
-# Imbalanced CIFAR-10 Subset Selection Experiments
+# Imbalanced CIFAR-10 and CIFAR-100 Subset Selection Experiments
 
 Investigating whether intelligently selected subsets of training data can match or exceed the performance of random subsets of the same size, under long-tailed class imbalance.
 
