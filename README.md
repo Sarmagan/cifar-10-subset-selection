@@ -59,7 +59,7 @@ Greedy algorithm is used to find the solution set, which then serves as the trai
 |--------|--------------|
 | Random baseline (mean) | 52.33% |
 | Submodular algorithm v1| 56.06% |
-| Submodular algorithm v2| 56.81% |
+| Submodular algorithm v2| 57.96% |
 
 ## Scripts
 
